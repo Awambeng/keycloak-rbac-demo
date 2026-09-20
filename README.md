@@ -4,7 +4,8 @@ Role-based access control (RBAC) with **Keycloak** and **Auth.js v5** in **Next.
 
 ## Demo
 
-<video src="./demo.webm" controls width="800"></video>
+[demo.webm](https://github.com/user-attachments/assets/83b4a488-dff7-43f2-a953-07fecc1d3104)
+
 
 The video shows: landing page, sign in with Keycloak, Keycloak login, profile page with role badge, navigating to Donations, and logging out.
 
