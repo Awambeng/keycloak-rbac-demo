@@ -7,8 +7,8 @@ export default async function HomePage() {
   if (!user) {
     return (
       <div className="flex flex-col items-center justify-center text-center px-4 py-24">
-        <h1 className="text-4xl font-bold text-white">Abdullah Foundation</h1>
-        <p className="mt-2 text-xl text-gray-300">Authentication Demo</p>
+        <h1 className="text-4xl font-bold text-white">Keycloak RBAC Demo</h1>
+        <p className="mt-2 text-xl text-gray-300">Role-Based Access Control</p>
 
         <p className="mt-6 max-w-lg text-gray-400 leading-relaxed">
           This application demonstrates authentication and role-based authorization
@@ -25,8 +25,8 @@ export default async function HomePage() {
 
   return (
     <div className="flex flex-col items-center text-center py-24">
-      <h1 className="text-4xl font-bold text-white">Abdullah Foundation</h1>
-      <p className="mt-2 text-xl text-gray-400">Authentication Demo</p>
+      <h1 className="text-4xl font-bold text-white">Keycloak RBAC Demo</h1>
+      <p className="mt-2 text-xl text-gray-400">Role-Based Access Control</p>
 
       <div className="mt-10 bg-[#2d2d2d] rounded-xl shadow p-8 w-full max-w-sm border border-gray-700">
         <p className="text-lg text-white">

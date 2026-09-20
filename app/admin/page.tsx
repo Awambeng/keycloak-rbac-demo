@@ -1,147 +1,49 @@
-"use client";
+import { requireRole } from "@/lib/auth-helpers";
+import { ROLES } from "@/lib/roles";
 
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
-import VolunteerList from "@/components/VolunteerList";
-import type { Volunteer } from "@/lib/types";
-
-export default function AdminPage() {
-  const { data: session, status } = useSession();
-  const router = useRouter();
-  const [showForm, setShowForm] = useState(false);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-  const [volunteers, setVolunteers] = useState<Volunteer[]>([]);
-  const [loadingVolunteers, setLoadingVolunteers] = useState(true);
-
-  // Fetch real volunteers from Keycloak on mount
-  useEffect(() => {
-    if (status !== "authenticated") return;
-    fetch("/api/admin/volunteers")
-      .then((res) => (res.ok ? res.json() : []))
-      .then(setVolunteers)
-      .catch(() => setVolunteers([]))
-      .finally(() => setLoadingVolunteers(false));
-  }, [status]);
-
-  if (status === "loading") {
-    return <div className="text-center mt-20 text-gray-400">Loading…</div>;
-  }
-
-  if (!session) {
-    router.push("/login?callbackUrl=/admin");
-    return null;
-  }
-
-  async function handleCreateVolunteer(e: React.FormEvent) {
-    e.preventDefault();
-    setSubmitting(true);
-    setMessage("");
-
-    try {
-      const res = await fetch("/api/admin/create-volunteer", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email }),
-      });
-
-      if (res.ok) {
-        setMessage("Volunteer created successfully!");
-        setName("");
-        setEmail("");
-        setShowForm(false);
-        // Re-fetch the volunteer list
-        setLoadingVolunteers(true);
-        const updated = await fetch("/api/admin/volunteers").then((r) =>
-          r.ok ? r.json() : []
-        );
-        setVolunteers(updated);
-      } else {
-        const data = await res.json();
-        setMessage(data.error || "Failed to create volunteer");
-      }
-    } catch {
-      setMessage("Network error");
-    } finally {
-      setSubmitting(false);
-      setLoadingVolunteers(false);
-    }
-  }
+export default async function AdminPage() {
+  await requireRole(ROLES.ADMIN);
 
   return (
     <div>
       <h1 className="text-2xl font-bold text-white mb-1">Welcome, Admin!</h1>
       <p className="text-gray-400 mb-8">Admin Dashboard</p>
 
-      <h2 className="text-lg font-semibold text-gray-300 mb-4">Volunteers</h2>
-      {loadingVolunteers ? (
-        <p className="text-gray-400 text-sm">Loading volunteers…</p>
-      ) : (
-        <VolunteerList volunteers={volunteers} />
-      )}
-
-      {message && (
-        <div
-          className={`mt-4 p-3 rounded-lg text-sm ${
-            message.includes("success")
-              ? "bg-green-900/40 text-green-300 border border-green-700"
-              : "bg-red-900/40 text-red-300 border border-red-700"
-          }`}
-        >
-          {message}
-        </div>
-      )}
-
-      <div className="mt-6">
-        <button
-          onClick={() => setShowForm(!showForm)}
-          className="bg-indigo-600 text-white px-5 py-2 rounded-lg hover:bg-indigo-700 font-medium"
-        >
-          Create Volunteer
-        </button>
-      </div>
-
-      {showForm && (
-        <form
-          onSubmit={handleCreateVolunteer}
-          className="mt-6 bg-[#2d2d2d] rounded-lg shadow p-6 max-w-md space-y-4 border border-gray-700"
-        >
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1">
-              Name
-            </label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-              className="w-full bg-[#393939] border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-            </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1">
-              Email
-            </label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="w-full bg-[#393939] border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
-          <button
-            type="submit"
-            disabled={submitting}
-            className="bg-indigo-600 text-white px-5 py-2 rounded-lg hover:bg-indigo-700 font-medium disabled:opacity-50"
+      <div className="bg-[#2d2d2d] rounded-xl shadow p-8 max-w-lg border border-gray-700">
+        <h2 className="text-lg font-semibold text-gray-300 mb-3">
+          User Management
+        </h2>
+        <p className="text-gray-400 text-sm leading-relaxed">
+          Users and roles are managed directly in the{" "}
+          <a
+            href="http://localhost:8080/admin"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-indigo-400 hover:text-indigo-300 underline"
           >
-            {submitting ? "Creating…" : "Create"}
-          </button>
-        </form>
-      )}
+            Keycloak Admin Console
+          </a>
+          . From there you can:
+        </p>
+        <ul className="mt-4 space-y-2 text-gray-400 text-sm">
+          <li className="flex items-start gap-2">
+            <span className="text-indigo-400 mt-0.5">•</span>
+            Create new users
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-indigo-400 mt-0.5">•</span>
+            Assign realm roles (admin, volunteer)
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-indigo-400 mt-0.5">•</span>
+            Enable / disable accounts
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-indigo-400 mt-0.5">•</span>
+            Reset passwords
+          </li>
+        </ul>
+      </div>
     </div>
   );
 }

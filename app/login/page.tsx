@@ -2,29 +2,21 @@
 
 import { useSession } from "next-auth/react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useEffect, Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import LoginButton from "@/components/LoginButton";
-import { ROLES } from "@/lib/roles";
 
 function LoginForm() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const callbackUrl = searchParams.get("callbackUrl");
 
-  // After successful login, redirect based on role
+  // After successful login, redirect to callbackUrl or profile page
   useEffect(() => {
-    if (status === "authenticated" && session?.user) {
-      const roles = session.user.roles ?? [];
-      if (callbackUrl) {
-        router.push(callbackUrl);
-      } else if (roles.includes(ROLES.ADMIN)) {
-        router.push("/admin");
-      } else {
-        router.push("/donations");
-      }
+    if (status === "authenticated") {
+      router.push(callbackUrl || "/");
     }
-  }, [status, session, callbackUrl, router]);
+  }, [status, callbackUrl, router]);
 
   if (status === "authenticated") {
     return <div className="text-center mt-20 text-gray-400">Redirecting…</div>;

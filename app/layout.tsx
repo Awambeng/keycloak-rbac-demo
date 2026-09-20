@@ -7,8 +7,8 @@ import Navbar from "@/components/Navbar";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Abdullah Foundation – Auth Demo",
-  description: "Authentication demo with Keycloak and Auth.js",
+  title: "Keycloak RBAC Demo",
+  description: "Role-based access control with Keycloak and Auth.js in Next.js",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

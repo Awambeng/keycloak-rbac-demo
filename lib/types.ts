@@ -1,6 +1,6 @@
 /**
  * Authenticated user shape used across the application.
- * Derived from the Auth.js session — roles come from the Keycloak JWT.
+ * Derived from the Auth.js session. Roles come from the Keycloak JWT.
  */
 export interface AuthUser {
   id: string;
@@ -14,10 +14,4 @@ export interface Donation {
   donor: string;
   amount: number;
   currency: string;
-}
-
-export interface Volunteer {
-  id?: string;
-  name: string;
-  email: string;
 }

@@ -4,7 +4,7 @@ import Keycloak from "next-auth/providers/keycloak";
 import { INTERNAL_KEYCLOAK_ROLES } from "@/lib/roles";
 
 // ---------------------------------------------------------------------------
-// Module augmentation — extend Session with our custom fields.
+// Module augmentation: extend Session with our custom fields.
 // JWT augmentation is NOT done via module declaration (deprecated in v5);
 // we use type assertions inside the callbacks instead.
 // ---------------------------------------------------------------------------
@@ -18,7 +18,12 @@ declare module "next-auth" {
   }
 }
 
-/** Extract app-relevant realm roles from a Keycloak access token payload. */
+/**
+ * Extract app-relevant realm roles from a Keycloak access token.
+ *
+ * Filters out Keycloak-internal roles (uma_authorization, offline_access)
+ * and realm-specific default roles (default-roles-*).
+ */
 function extractRoles(payload: { realm_access?: { roles?: string[] } }): string[] {
   const realmRoles = payload.realm_access?.roles ?? [];
   return realmRoles.filter(
@@ -47,7 +52,7 @@ export const { handlers, auth } = NextAuth({
   ],
 
   callbacks: {
-    // Decode roles from the Keycloak access_token JWT — no extra HTTP calls.
+    // Decode roles from the Keycloak access_token JWT. No extra HTTP calls.
     // On first sign-in, account is present. On subsequent requests, account
     // is undefined and the token already carries id/roles.
     jwt({ token, account }) {

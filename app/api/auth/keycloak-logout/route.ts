@@ -7,7 +7,7 @@ import { NextResponse } from "next/server";
  * Flow:
  * 1. User clicks Logout in the app
  * 2. Auth.js signOut cleans up the Next.js session
- * 3. Redirects here → redirects to Keycloak logout
+ * 3. Redirects here, then redirects to Keycloak logout
  * 4. Keycloak destroys its session
  * 5. Keycloak redirects back to post_logout_redirect_uri
  */

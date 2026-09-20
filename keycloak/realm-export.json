@@ -1,6 +1,6 @@
 {
-  "realm": "abdullah-foundation",
-  "displayName": "Abdullah Foundation",
+  "realm": "my-app",
+  "displayName": "My App",
   "enabled": true,
   "sslRequired": "none",
   "registrationAllowed": false,
@@ -17,7 +17,7 @@
         "description": "Administrator with full access",
         "composite": false,
         "clientRole": false,
-        "containerId": "abdullah-foundation"
+        "containerId": "my-app"
       },
       {
         "id": "volunteer-role-id",
@@ -25,17 +25,17 @@
         "description": "Volunteer with limited access",
         "composite": false,
         "clientRole": false,
-        "containerId": "abdullah-foundation"
+        "containerId": "my-app"
       }
     ]
   },
   "clients": [
     {
-      "clientId": "foundation-web",
-      "name": "Foundation Web App",
+      "clientId": "app-client",
+      "name": "Web Application",
       "enabled": true,
       "clientAuthenticatorType": "client-secret",
-      "secret": "foundation-web-secret",
+      "secret": "app-client-secret",
       "redirectUris": [
         "http://localhost:3000/*"
       ],

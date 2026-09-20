@@ -1,6 +1,6 @@
 /**
  * Single source of truth for Keycloak role names and access rules.
- * Imported by both server and client code — contains no secrets.
+ * Imported by both server and client code. Contains no secrets.
  */
 
 export const ROLES = {

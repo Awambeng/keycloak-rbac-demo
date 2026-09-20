@@ -25,16 +25,7 @@ export class AuthorizationError extends Error {
 // ---------------------------------------------------------------------------
 
 /** Convert an Auth.js session into the app-level AuthUser shape. */
-function toAuthUser(
-  session: {
-    user?: {
-      id?: string;
-      name?: string | null;
-      email?: string | null;
-      roles?: string[];
-    };
-  } | null,
-): AuthUser | null {
+function toAuthUser(session: Awaited<ReturnType<typeof auth>>): AuthUser | null {
   if (!session?.user) return null;
   return {
     id: session.user.id ?? "",
